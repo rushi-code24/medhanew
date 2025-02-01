@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accessible Quiz</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #FFD3A5, #FD6585);
+            font-size: 1.8em;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            font-size: 2em;
+            margin: 20px 0;
+        }
+        .quiz-container {
+            width: 90%;
+            max-width: 600px;
+            padding: 20px;
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 20px;
+        }
+        .option {
+            padding: 15px;
+            background: #FFD700;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.3s;
+            font-size: 1.5em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .option:hover {
+            background: #FFA500;
+        }
+        .feedback {
+            margin-top: 20px;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+       
+        .audio-container {
+            width: 100%;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            font-size: 1em;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 1000;
+        }
+        .back-button:hover {
+            background: #0056b3;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <button class="back-button" onclick="goBack()">← Back</button>
+        <h1>Level 2</h1>
+        <div class="quiz-container">
+            <div class="audio-container">
+                <audio id="question-audio" controls></audio>
+            </div>
+            <div class="options" id="options"></div>
+            <div class="feedback" id="feedback"></div>
+            <div id="timer">Time: 0s</div>
+        </div>
+    </div>
+
+    <script>
+        function goBack() {
+            window.location.href = "testing.html";
+        }
+
+        const quizData = [
+            { question: "audio/a.mp3", correct: "A", options: ["A", "B", "C", "D"] },
+            { question: "audio/3.mp3", correct: "3", options: ["1", "2", "3", "4"] },
+            { question: "audio/e.mp3", correct: "E", options: ["F", "G", "H", "E"] },
+            { question: "audio/7.mp3", correct: "7", options: ["5", "6", "7", "8"] },
+            { question: "audio/m.mp3", correct: "M", options: ["N", "M", "O", "P"] }
+        ];
+        
+        let currentIndex = 0;
+        let correctAnswers = 0;
+        let startTime = Date.now();
+
+        function updateTimer() {
+            let elapsedTime = Math.floor((Date.now() - startTime) / 1000);
+            document.getElementById("timer").innerText = `Time: ${elapsedTime}s`;
+        }
+        
+        let timerInterval = setInterval(updateTimer, 1000);
+
+        function loadQuestion() {
+            const questionData = quizData[currentIndex];
+            const audioElement = document.getElementById("question-audio");
+            audioElement.src = questionData.question;
+            audioElement.play();
+            
+            const optionsContainer = document.getElementById("options");
+            optionsContainer.innerHTML = "";
+
+            questionData.options.forEach(option => {
+                let button = document.createElement("div");
+                button.classList.add("option");
+                button.innerText = option;
+                button.onclick = () => checkAnswer(button, option, questionData.correct);
+                optionsContainer.appendChild(button);
+            });
+        }
+
+        function checkAnswer(button, selected, correct) {
+    if (selected === correct) {
+        correctAnswers++;
+    }
+
+    currentIndex++;
+    if (currentIndex < quizData.length) {
+        loadQuestion(); // Move to the next question immediately
+    } else {
+        endQuiz();
+    }
+}
+
+        function endQuiz() {
+            clearInterval(timerInterval);
+            document.getElementById("question-audio").remove();
+            document.getElementById("options").innerHTML = "";
+            document.getElementById("feedback").innerText = `Quiz Completed! Well done! 🎉\nCorrect Answers: ${correctAnswers}/${quizData.length}`;
+        }
+
+        loadQuestion();
+
+        
+    </script>
+</body>
+</html>

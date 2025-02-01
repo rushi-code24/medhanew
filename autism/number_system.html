@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Number Sounds</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4, #ffdde1);
+            background-size: 400% 400%;
+            animation: gradientBG 10s ease infinite;
+            font-size: 1.8em;
+            margin: 0;
+            padding-top: 80px; /* Prevents button overlap */
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Back Button */
+        .back-button-container {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 1000;
+        }
+
+        .back-button {
+            font-size: 18px;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        .back-button:hover {
+            background-color: #0056b3;
+            transform: scale(1.1);
+        }
+
+        /* Adjust button size for smaller screens */
+        @media (max-width: 768px) {
+            .back-button {
+                font-size: 16px;
+                padding: 8px 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .back-button {
+                font-size: 14px;
+                padding: 6px 14px;
+            }
+        }
+
+        h1 {
+            font-size: 2em;
+            margin: 20px 0;
+            color: #333;
+        }
+
+        .number-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            width: 80%;
+            margin: 50px auto;
+            gap: 20px;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .number-box {
+            height: 160px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: skyblue;
+            color: #000;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: transform 0.3s, background-color 0.3s;
+            padding: 15px;
+        }
+
+        .number-box:hover {
+            transform: scale(1.1);
+            background-color: #ff9900;
+        }
+
+        .number-box img {
+            width: 80px;
+            height: 80px;
+        }
+
+        .number-box span {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Back Button -->
+    <div class="back-button-container">
+        <button class="back-button" onclick="goBack()">← Back</button>
+    </div>
+
+    <h1>Click on a Number</h1>
+    <div class="number-container" id="numberContainer"></div>
+
+    <script>
+        function goBack() {
+            window.location.href = "levels.html"; // Change to your learning page URL
+        }
+
+        const container = document.getElementById("numberContainer");
+
+        const numberWords = {
+            1: { word: "One", image: "images/images_num/1.png" },
+            2: { word: "Two", image: "images/images_num/2.png" },
+            3: { word: "Three", image: "images/images_num/3.png" },
+            4: { word: "Four", image: "images/images_num/4.png" },
+            5: { word: "Five", image: "images/images_num/5.png" },
+            6: { word: "Six", image: "images/images_num/6.png" },
+            7: { word: "Seven", image: "images/images_num/7.png" },
+            8: { word: "Eight", image: "images/images_num/8.png" },
+            9: { word: "Nine", image: "images/images_num/9.png" },
+            10: { word: "Ten", image: "images/images_num/10.png" },
+            20: { word: "Twenty", image: "images/images_num/20.png" },
+            30: { word: "Thirty", image: "images/images_num/30.png" },
+            40: { word: "Forty", image: "images/images_num/40.png" },
+            50: { word: "Fifty", image: "images/images_num/50.png" },
+            60: { word: "Sixty", image: "images/images_num/60.png" },
+            70: { word: "Seventy", image: "images/images_num/70.png" },
+            80: { word: "Eighty", image: "images/images_num/80.png" },
+            90: { word: "Ninety", image: "images/images_num/90.png" },
+            100: { word: "One hundred", image: "images/images_num/100.png" }
+        };
+
+        for (let number in numberWords) {
+            let div = document.createElement("div");
+            div.classList.add("number-box");
+            div.innerHTML = `
+                <img src="${numberWords[number].image}" alt="${numberWords[number].word}">
+                <span>${numberWords[number].word}</span>
+            `;
+            div.onclick = () => playSound(number);
+            container.appendChild(div);
+        }
+
+        function playSound(number) {
+            let audio = new Audio(`https://ssl.gstatic.com/dictionary/static/sounds/20200429/${number}-us.mp3`);
+            audio.play();
+
+            let utterance = new SpeechSynthesisUtterance(numberWords[number].word);
+            window.speechSynthesis.speak(utterance);
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEDHA-Autism Child Communication</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .back-button {
+            background-color: #007bff;
+            color: white;
+            font-size: 18px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            margin: 10px auto;
+            display: inline-block;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .back-button:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+        .board {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            max-width: 900px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        .button {
+            background-color: lightblue;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 120px;
+            width: 100%;
+        }
+
+        .button img {
+            width: 50px;
+            height: 50px;
+            margin-bottom: 5px;
+        }
+
+        .button:active {
+            background-color: #ff9999;
+        }
+
+        .controls {
+            margin: 20px;
+        }
+
+        .controls button {
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 18px;
+            cursor: pointer;
+            border: none;
+            border-radius: 8px;
+        }
+
+        .speak { background-color: #28a745; color: white; }
+        .clear { background-color: blue; color: white; }
+        .delete { background-color: #dc6f35; color: white; }
+
+        h2 { font-size: 24px; }
+        h3 { font-size: 20px; }
+
+        #output {
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            text-align: center;
+            z-index: 1000;
+            width: 300px;
+        }
+
+        .popup img {
+            width: 80px;
+            height: 80px;
+            margin: 10px 0;
+        }
+
+        .popup h3 {
+            font-size: 22px;
+            margin-bottom: 8px;
+        }
+
+        .popup button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            background-color: red;
+            color: white;
+            border-radius: 8px;
+        }
+
+        .board {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); /* Ensures 5 containers per row */
+    gap: 10px;
+    max-width: 900px;
+    margin: auto;
+    padding: 20px;
+}
+
+@media (max-width: 768px) {
+    .board {
+        grid-template-columns: repeat(2, 1fr); /* 2 containers per row on small screens */
+    }
+}
+
+@media (max-width: 480px) {
+    .board {
+        grid-template-columns: repeat(1, 1fr); /* 1 container per row on very small screens */
+    }
+}
+
+    </style>
+</head>
+<body>
+
+    <button class="back-button" onclick="goBack()">⬅ Back</button>
+
+    <h2>AAC Communication Board</h2>
+
+    <div class="board" id="board">
+        <button class="button" onclick="showPopup('Yes', 'images/speak/yes.png')"><img src="images/speak/yes.png" alt="">Yes</button>
+        <button class="button" onclick="showPopup('No', 'images/speak/no.png')"><img src="images/speak/no.png" alt="">No</button>
+        <button class="button" onclick="showPopup('Stop', 'images/speak/stop.png')"><img src="images/speak/stop.png" alt="">Stop</button>
+        <button class="button" onclick="showPopup('I need help', 'images/speak/help.png')"><img src="images/speak/help.png" alt="">I Need Help</button>
+        <button class="button" onclick="showPopup('Toilet', 'images/speak/toilet.png')"><img src="images/speak/toilet.png" alt="">Toilet</button>
+        <button class="button" onclick="showPopup('Call 108', 'images/speak/call.png')"><img src="images/speak/call.png" alt="">Call 108</button>
+        <button class="button" onclick="showPopup('All done', 'images/speak/done.png')"><img src="images/speak/done.png" alt="">All Done</button>
+        <button class="button" onclick="showPopup('Spell', 'images/speak/spell.png')"><img src="images/speak/spell.png" alt="">Spell</button>
+        <button class="button" onclick="showPopup('Angry', 'images/speak/anger.jpg')"><img src="images/speak/anger.jpg" alt="">angry</button>
+        <button class="button" onclick="showPopup('bey', 'images/speak/bey.jpg')"><img src="images/speak/bey.jpg" alt="">bey</button>
+        <button class="button" onclick="showPopup('done', 'images/speak/done.png')"><img src="images/speak/done.png" alt="">done</button>
+        <button class="button" onclick="showPopup('drink', 'images/speak/drink.jpg')"><img src="images/speak/drink.jpg" alt="">drink</button>
+        <button class="button" onclick="showPopup('happy', 'images/speak/happy.jpg')"><img src="images/speak/happy.jpg" alt="">Happy</button>
+        <button class="button" onclick="showPopup('sleep', 'images/speak/sleep.jpg')"><img src="images/speak/sleep.jpg" alt="">Sleep</button>
+        <button class="button" onclick="showPopup('eat', 'images/speak/eat.jpg')"><img src="images/speak/eat.jpg" alt="">Eat</button>
+       
+
+    </div>
+
+    <h3>Selected Text: <span id="output"></span></h3>
+
+    <div class="controls">
+        <button class="speak" onclick="speakText()">🔊 Speak</button>
+        <button class="delete" onclick="deleteLast()">⬅ Delete</button>
+        <button class="clear" onclick="clearText()">❌ Clear</button>
+    </div>
+
+    <div class="popup" id="popup">
+        <h3 id="popup-text"></h3>
+        <img id="popup-img" src="" alt="">
+        <br>
+        <button onclick="closePopup()">Close</button>
+    </div>
+
+    <script>
+        let output = document.getElementById("output");
+
+        function addText(text) {
+            output.textContent += (output.textContent ? " " : "") + text;
+        }
+
+        function clearText() {
+            output.textContent = "";
+        }
+
+        function deleteLast() {
+            let words = output.textContent.split(" ");
+            words.pop();
+            output.textContent = words.join(" ");
+        }
+
+        function speakText() {
+            let text = output.textContent;
+            if (text) {
+                let utterance = new SpeechSynthesisUtterance(text);
+                speechSynthesis.speak(utterance);
+            }
+        }
+
+        function goBack() {
+            window.location.href = "child_modules.html";
+        }
+
+        function showPopup(text, imgSrc) {
+            document.getElementById("popup-text").innerText = text;
+            document.getElementById("popup-img").src = imgSrc;
+            document.getElementById("popup").style.display = "block";
+            addText(text);
+            speakText();
+        }
+
+        function closePopup() {
+            document.getElementById("popup").style.display = "none";
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accessible Quiz</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #FFD3A5, #FD6585);
+            font-size: 1.8em;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        h1 {
+            font-size: 2em;
+            margin: 10px 0;
+        }
+        .quiz-container {
+            width: 90%;
+            max-width: 600px;
+            padding: 20px;
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .question {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+        .options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 20px;
+            width: 100%;
+        }
+        .option {
+            padding: 15px;
+            background: #FFD700;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.3s;
+            font-size: 1.5em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .option:hover {
+            background: #FFA500;
+        }
+        .feedback {
+            margin-top: 20px;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            font-size: 1em;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .back-button:hover {
+            background: #0056b3;
+        }
+        .timer {
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            body {
+                font-size: 1.2em;
+            }
+            .question {
+                font-size: 1.3em;
+            }
+            .options {
+                grid-template-columns: 1fr;
+            }
+            .option {
+                font-size: 1.2em;
+                padding: 12px;
+            }
+            .back-button {
+                font-size: 0.9em;
+                padding: 8px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="back-button" onclick="goBack()">← Back</button>
+    <h1>Level 1</h1>
+    <div class="quiz-container">
+        <div class="timer" id="timer">Time: 0s</div>
+        <div class="question" id="question">Loading question...</div>
+        <div class="options" id="options"></div>
+        <div class="feedback" id="feedback"></div>
+    </div>
+
+    <script>
+        function goBack() {
+            window.location.href = "testing.html";
+        }
+    
+        const quizData = [
+            { question: "A?", correct: "A", options: ["A", "B", "C", "D"] },
+            { question: "3?", correct: "3", options: ["1", "2", "3", "4"] },
+            { question: "E?", correct: "E", options: ["F", "G", "H", "E"] },
+            { question: "7?", correct: "7", options: ["5", "6", "7", "8"] },
+            { question: "M?", correct: "M", options: ["N", "M", "O", "P"] }
+        ];
+    
+        let currentIndex = 0;
+        let correctAnswers = 0;
+        let startTime = Date.now();
+    
+        // Timer function
+        function updateTimer() {
+            let elapsedTime = Math.floor((Date.now() - startTime) / 1000);
+            document.getElementById("timer").innerText = `Time: ${elapsedTime}s`;
+        }
+        
+        let timerInterval = setInterval(updateTimer, 1000);
+    
+        function loadQuestion() {
+            if (currentIndex >= quizData.length) {
+                endQuiz();
+                return;
+            }
+    
+            const questionData = quizData[currentIndex];
+            document.getElementById("question").innerText = questionData.question;
+            const optionsContainer = document.getElementById("options");
+            optionsContainer.innerHTML = "";
+    
+            questionData.options.forEach(option => {
+                let button = document.createElement("div");
+                button.classList.add("option");
+                button.innerText = option;
+                button.onclick = () => checkAnswer(option, questionData.correct);
+                optionsContainer.appendChild(button);
+            });
+        }
+    
+        function checkAnswer(selected, correct) {
+            if (selected === correct) {
+                correctAnswers++;
+            }
+            currentIndex++;
+            loadQuestion(); // Move to the next question immediately
+        }
+    
+        function endQuiz() {
+            clearInterval(timerInterval);
+            let elapsedTime = Math.floor((Date.now() - startTime) / 1000);
+            document.getElementById("question").innerText = "Quiz Completed!";
+            document.getElementById("options").innerHTML = "";
+            document.getElementById("feedback").innerText = `Well done! 🎉\nCorrect Answers: ${correctAnswers}/${quizData.length}\nTime Taken: ${elapsedTime}s`;
+    
+            // Send score and time to the server via AJAX
+            const phone = "USER_PHONE_NUMBER"; // Replace with actual phone number, typically from session or hidden field
+            const data = {
+                phone: phone,
+                score: correctAnswers,
+                time_taken: elapsedTime
+            };
+    
+            fetch('save_score.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Score saved:', data);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        }
+    
+        // Start the quiz by loading the first question
+        loadQuestion();
+    </script>
+    
+
+</body>
+</html>

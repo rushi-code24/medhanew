@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Questionnaire</title>
+    <style>
+      /* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    text-align: center;
+}
+
+/* Questionnaire Container */
+.question-container {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 600px;
+    text-align: left;
+    display: none;
+}
+
+.active {
+    display: block;
+}
+
+/* Options Styling */
+.option {
+    font-weight: bold;
+    color: #007bff;
+}
+
+label {
+    display: block;
+    font-size: 18px;
+    margin: 10px 0;
+    cursor: pointer;
+}
+
+/* Button Styling */
+.button-group {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.btn {
+    padding: 10px 20px;
+    border: 2px solid #007bff;
+    background-color: white;
+    color: #007bff;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 45%;
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    background-color: #007bff;
+    color: white;
+}
+
+/* Pop-up Styling */
+.popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    width: 90%;
+    max-width: 400px;
+}
+
+.popup.active {
+    display: block;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .question-container {
+        width: 95%;
+        padding: 15px;
+    }
+
+    label {
+        font-size: 16px;
+    }
+
+    .btn {
+        width: 100%;
+        font-size: 14px;
+        padding: 12px;
+    }
+
+    .button-group {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+}
+
+/* Back Button Styling */
+.back-btn {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.back-btn:hover {
+    background-color: #0056b3;
+}
+
+    </style>
+</head>
+<body>
+    <button class="back-btn" onclick="goBack()">← Back</button>
+
+    <h2>Here you can check wether your child is suffering with Autism ? </h2>
+    <div id="questionnaire"></div>
+    <div id="popup" class="popup"></div>
+    
+    <script>
+        const questions = [
+            "If you point at something across the room, does your child look at it?",
+            "Have you ever wondered if your child might be deaf?",
+            "If you point at something across the room, does your child look at it?",
+            "Does your child like climbing on things?",
+            "Does your child make unusual finger movements near his or her eyes?",
+            "Does your child point with one finger to ask for something or to get help?",
+            "Does your child point with one finger to show you something interesting?",
+            "Is your child interested in other children?",
+            "Does your child show you things by bringing them to you or holding them up for you to see?",
+            "Does your child respond when you call his or her name?",
+            "When you smile at your child, does he or she smile back at you?",
+            "Does your child get upset by everyday noises?",
+            "Does your child walk?",
+            "Does your child look you in the eye when you are talking to him or her?",
+            "Does your child try to copy what you do?",
+            "If you turn your head to look at something, does your child look around to see what you are looking at?",
+            "Does your child point with one finger to show you something interesting?",
+            "Is your child interested in other children?",
+            "Does your child show you things by bringing them to you or holding them up for you to see?",
+            "Does your child respond when you call his or her name?"
+        ];
+        
+        let currentQuestion = 0;
+        let responses = [];
+        
+        function renderQuestion() {
+            document.getElementById("questionnaire").innerHTML = `
+                <div class="question-container active">
+                    <p><strong>${currentQuestion + 1}.</strong> ${questions[currentQuestion]}</p>
+                    <label><input type="radio" name="question" value="yes" onclick="nextQuestion('yes')"> <span class="option">YES</span></label>
+                    <label><input type="radio" name="question" value="no" onclick="nextQuestion('no')"> <span class="option">NO</span></label>
+                    <div class="button-group">
+                        <button class="btn" onclick="prevQuestion()" ${currentQuestion === 0 ? 'disabled' : ''}>Back</button>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function nextQuestion(answer) {
+            responses[currentQuestion] = answer;
+            
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                renderQuestion();
+            } else {
+                showPopup();
+            }
+        }
+        
+        function prevQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                renderQuestion();
+            }
+        }
+        
+        function showPopup() {
+            const noCount = responses.filter(response => response === 'no').length;
+            let message = `<p>You have completed all 20 questions.<br><br><strong>Number of uneven answers: ${noCount}</strong></p>`;
+            
+            if (noCount >= 15) {
+                message += `<p style="color: red;"><strong>Emergency:</strong> You need to meet a doctor!</p>`;
+            } else if (noCount > 10) {
+                message += `<p style="color: orange;"><strong>Suggestion:</strong> You should contact a doctor.</p>`;
+            } else {
+                message += `<p style="color: green;"><strong>your kid is good.</strong>normal condition .</p>`;
+            }
+            
+            message += `<button class="btn" onclick="closePopup()">OK</button>`;
+            
+            document.getElementById("popup").innerHTML = message;
+            document.getElementById("popup").classList.add("active");
+        }
+        
+        function closePopup() {
+            document.getElementById("popup").classList.remove("active");
+        }
+        
+        renderQuestion();
+
+        function goBack() {
+    window.history.back();
+}
+
+    </script>
+     <footer class="footer_section">
+        <div class="container">
+          <p>
+            &copy;  All Rights Reserved By
+            <a href="">SAVITRU.Co.GDG</a>
+          </p>
+        </div>
+      </footer>
+</body>
+</html>

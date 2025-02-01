@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEDHA - AAC Communication</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4, #ffdde1);
+            background-size: 400% 400%;
+            animation: gradientBG 10s ease infinite;
+            font-size: 1.8em;
+            margin: 0;
+            padding-top: 80px;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .back-button-container {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 1000;
+        }
+
+        .back-button {
+            font-size: 18px;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        .back-button:hover {
+            background-color: #0056b3;
+            transform: scale(1.1);
+        }
+
+        h1 {
+            font-size: 2em;
+            color: #333;
+        }
+
+        .board {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            width: 80%;
+            margin: 50px auto;
+            gap: 20px;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .button {
+            height: 160px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: skyblue;
+            color: #000;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: transform 0.3s, background-color 0.3s;
+            padding: 15px;
+            border: none;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        .button:hover {
+            transform: scale(1.1);
+            background-color: #ff9900;
+        }
+
+        .button img {
+            width: 80px;
+            height: 80px;
+        }
+
+        .controls {
+            margin-top: 20px;
+        }
+
+        .controls button {
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 18px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            color: white;
+        }
+
+        .speak { background-color: #28a745; }
+        .clear { background-color: blue; }
+        .delete { background-color: #dc6f35; }
+    </style>
+</head>
+<body>
+    <div class="back-button-container">
+        <button class="back-button" onclick="goBack()">⬅ Back</button>
+    </div>
+
+    <h1>WORD SYSTEM</h1>
+
+    <div class="board" id="board"></div>
+
+    <h2>Selected Text: <span id="output"></span></h2>
+
+    <div class="controls">
+        <button class="speak" onclick="speakText()">🔊 Speak</button>
+        <button class="delete" onclick="deleteLast()">⬅ Delete</button>
+        <button class="clear" onclick="clearText()">❌ Clear</button>
+    </div>
+
+    <script>
+        const board = document.getElementById("board");
+        const output = document.getElementById("output");
+
+        const buttons = [
+            { text: "Yes", image: "images/speak/yes.png" },
+            { text: "No", image: "images/speak/no.png" },
+            { text: "Stop", image: "images/speak/stop.png" },
+            { text: "I Need Help", image: "images/speak/help.png" },
+            { text: "Toilet", image: "images/speak/toilet.png" },
+            { text: "Call 108", image: "images/speak/call.png" },
+            { text: "All Done", image: "images/speak/done.png" },
+            { text: "Spell", image: "images/speak/spell.png" },
+            { text: "Angry", image: "images/speak/anger.jpg" },
+            { text: "Bye", image: "images/speak/bey.jpg" },
+            { text: "Drink", image: "images/speak/drink.jpg" },
+            { text: "Happy", image: "images/speak/happy.jpg" },
+            { text: "Sleep", image: "images/speak/sleep.jpg" },
+            { text: "Eat", image: "images/speak/eat.jpg" }
+        ];
+
+        buttons.forEach(item => {
+            let button = document.createElement("button");
+            button.classList.add("button");
+            button.innerHTML = `<img src="${item.image}" alt="">${item.text}`;
+            button.onclick = () => addText(item.text);
+            board.appendChild(button);
+        });
+
+        function addText(text) {
+            output.textContent += (output.textContent ? " " : "") + text;
+            speakText();
+        }
+
+        function clearText() {
+            output.textContent = "";
+        }
+
+        function deleteLast() {
+            let words = output.textContent.split(" ");
+            words.pop();
+            output.textContent = words.join(" ");
+        }
+
+        function speakText() {
+            let text = output.textContent;
+            if (text) {
+                let utterance = new SpeechSynthesisUtterance(text);
+                speechSynthesis.speak(utterance);
+            }
+        }
+
+        function goBack() {
+            window.location.href = "child_modules.html";
+        }
+    </script>
+</body>
+</html>

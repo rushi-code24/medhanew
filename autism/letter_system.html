@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alphabet Sounds</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4, #ffdde1);
+            background-size: 400% 400%;
+            animation: gradientBG 10s ease infinite;
+            font-size: 1.8em;
+            margin: 0;
+            padding-top: 80px; /* Prevents button overlap */
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Back Button */
+        .back-button-container {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 1000;
+        }
+
+        .back-button {
+            font-size: 18px;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        .back-button:hover {
+            background-color: #0056b3;
+            transform: scale(1.1);
+        }
+
+        /* Adjust button size for smaller screens */
+        @media (max-width: 768px) {
+            .back-button {
+                font-size: 16px;
+                padding: 8px 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .back-button {
+                font-size: 14px;
+                padding: 6px 14px;
+            }
+        }
+
+        h1 {
+            font-size: 2em;
+            margin: 20px 0;
+            color: #333;
+        }
+
+        .number-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            width: 80%;
+            margin: 50px auto;
+            gap: 20px;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .number-box {
+            height: 160px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: skyblue;
+            color: #000;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: transform 0.3s, background-color 0.3s;
+            padding: 15px;
+        }
+
+        .number-box:hover {
+            transform: scale(1.1);
+            background-color: #ff9900;
+        }
+
+        .number-box img {
+            width: 80px;
+            height: 80px;
+        }
+
+        .number-box span {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Back Button -->
+    <div class="back-button-container">
+        <button class="back-button" onclick="goBack()">← Back</button>
+    </div>
+
+    <h1>Click on a Letter</h1>
+    <div class="number-container" id="numberContainer"></div>
+
+    <script>
+        function goBack() {
+            window.location.href = "levels.html"; // Change to your learning page URL
+        }
+
+        const container = document.getElementById("numberContainer");
+
+        const letterWords = {
+            A: { word: "A", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBr839nMUz322GfIgcD11wkTptb4Dcw8gXBg&s" },
+            B: { word: "B", image: "https://m.media-amazon.com/images/I/71bgARSO2EL._AC_SL1500_.jpg" },
+            C: { word: "C", image: "https://img.freepik.com/premium-photo/cute-ginger-cat-sitting-looking-camera-isolated-white-background_270100-2630.jpg?w=2000" },
+            D: { word: "D", image: "https://tse3.mm.bing.net/th?id=OIP.5OENVe5pO8Krm8ko7XmDuwHaHk&pid=Api&P=0&h=180" },
+            E: { word: "E", image: "https://tse2.mm.bing.net/th?id=OIP.XtYBltH5eY3Xv3ADR7cK1gHaFj&pid=Api&P=0&h=180" },
+            F: { word: "F", image: "https://www.homestratosphere.com/wp-content/uploads/2019/03/3-5-3-1.jpg" },
+            G: { word: "G", image: "https://static.vecteezy.com/system/resources/previews/020/716/108/original/gift-box-with-ribbon-isolated-on-transparent-background-birthday-gift-with-love-concept-of-abstract-holiday-3d-rendering-illustration-png.png" },
+            H: { word: "H", image: "https://clipartix.com/wp-content/uploads/2016/11/Hands-hand-clip-art-free-clipart-images.jpg" },
+            I: { word: "I", image: "https://images6.alphacoders.com/337/337990.jpg" },
+            J: { word: "J", image: "http://getdrawings.com/image/joker-drawing-for-kids-62.jpg" },
+            K: { word: "K", image: "https://howtodrawforkids.com/wp-content/uploads/2020/09/How-to-draw-a-king-for-kids.jpg" },
+            L: { word: "L", image: "https://static.vecteezy.com/system/resources/previews/008/384/348/original/printable-cute-drawing-lion-for-school-and-kids-vector.jpg" },
+            M: { word: "M", image: "https://static.vecteezy.com/system/resources/previews/024/449/381/large_2x/monkey-isolated-on-white-background-generate-ai-free-photo.jpg" },
+            N: { word: "N", image: "https://a-z-animals.com/media/2022/12/iStock-1188705022.jpg" },
+            O: { word: "O", image: "https://cdn.download.ams.birds.cornell.edu/api/v1/asset/297342281/1800" },
+            P: { word: "P", image: "https://tse4.mm.bing.net/th?id=OIP.tNtDFztHBlqoHmo5gAD9PwHaE6&pid=Api&P=0&h=180" },
+            Q: { word: "Q", image: "https://thumbs.dreamstime.com/b/cute-girl-queen-female-character-princess-costume-crown-scepter-white-background-68605666.jpg" },
+            R: { word: "R", image: "https://easydrawingguides.com/wp-content/uploads/2022/02/how-to-draw-a-rabbit-featured-image-1200.png" },
+            S: { word: "S", image: "https://www.floridamuseum.ufl.edu/wp-content/uploads/sites/116/2020/10/IMG_2567-2.jpg" },
+            T: { word: "T", image: "https://static.vecteezy.com/system/resources/previews/005/836/473/original/cartoon-mascot-cute-illustration-female-teacher-teaching-isolated-free-vector.jpg" },
+            U: { word: "U", image: "https://www.ikea.com/om/en/images/products/knalla-umbrella-black__0934105_pe792338_s5.jpg" },
+            V: { word: "V", image: "https://img.freepik.com/free-photo/isolated-white-van-white-surface_125540-2397.jpg" },
+            W: { word: "W", image: "https://tse3.mm.bing.net/th?id=OIP.uMmJvI4I2B1w9Z80ThC-wwHaHa&pid=Api&P=0&h=180" },
+            X: { word: "X", image: "" },
+            Y: { word: "Y", image: "https://static.vecteezy.com/system/resources/previews/009/749/883/original/woman-meditation-activity-logo-girl-yoga-sport-icon-cartoon-female-health-mascot-illustration-free-vector.jpg" },
+            Z: { word: "Z", image: "https://static.vecteezy.com/system/resources/previews/024/865/883/non_2x/zebra-with-ai-generated-free-png.png" }
+        };
+
+        for (let letter in letterWords) {
+            let div = document.createElement("div");
+            div.classList.add("number-box");
+            div.innerHTML = `
+                <img src="${letterWords[letter].image}" alt="${letterWords[letter].word}">
+                <span>${letterWords[letter].word}</span>
+            `;
+            div.onclick = () => playSound(letter);
+            container.appendChild(div);
+        }
+
+        function playSound(letter) {
+            let audio = new Audio(`https://ssl.gstatic.com/dictionary/static/sounds/20200429/${letter}-us.mp3`);
+            audio.play();
+
+            let utterance = new SpeechSynthesisUtterance(letterWords[letter].word);
+            window.speechSynthesis.speak(utterance);
+        }
+    </script>
+
+</body>
+</html>

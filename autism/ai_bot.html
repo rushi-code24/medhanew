@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chatbot</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        #chat-container { width: 50%; margin: auto; border: 1px solid #ddd; padding: 10px; height: 400px; overflow-y: scroll; }
+        .message { margin: 5px; padding: 10px; border-radius: 5px; }
+        .user { background-color: #007bff; color: white; text-align: right; }
+        .bot { background-color: #f1f1f1; color: black; text-align: left; }
+        input, button { margin-top: 10px; padding: 10px; }
+    </style>
+</head>
+<body>
+
+    <h2>Chat with AI Bot</h2>
+    <div id="chat-container"></div>
+    <input type="text" id="user-input" placeholder="Type your message...">
+    <button onclick="sendMessage()">Send</button>
+
+    <script>
+        function sendMessage() {
+            let userInput = document.getElementById("user-input").value;
+            if (!userInput) return;
+
+            // Display user message
+            let chatContainer = document.getElementById("chat-container");
+            chatContainer.innerHTML += `<div class="message user">${userInput}</div>`;
+
+            // Send message to Flask API
+            fetch("http://127.0.0.1:5000/chat", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ message: userInput })
+            })
+            .then(response => response.json())
+            .then(data => {
+                chatContainer.innerHTML += `<div class="message bot">${data.response}</div>`;
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            })
+            .catch(error => console.error("Error:", error));
+
+            document.getElementById("user-input").value = "";
+        }
+    </script>
+
+</body>
+</html>
